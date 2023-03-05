@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using RPG.Control;
 
-namespace RPG.Animations
+namespace RPG.Movement
 {
-    public class PlayerAnimation : MonoBehaviour
+    public class PlayerMovementAnimation : MonoBehaviour
     {
         private const string PLAYER_ANIMATOR_FORWARD_SPEED = "forwardSpeed";
 
-        [SerializeField] private PlayerController Player;
         private Animator playereAnimator;
         private NavMeshAgent playerAgent;
         private Vector3 playerVelocity;
