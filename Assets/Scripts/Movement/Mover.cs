@@ -11,7 +11,6 @@ namespace RPG.Movement
 
     public class Mover : MonoBehaviour, IAction
     {
-        [SerializeField] private Transform targerTransform;
         private bool isWalking;
         private NavMeshAgent moverAgent;
 

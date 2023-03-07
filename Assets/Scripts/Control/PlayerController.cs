@@ -14,13 +14,13 @@ namespace RPG.Control
         private void Awake()
         {
             playerMover = GetComponent<Mover>();
-            playerFighter= GetComponent<Fighter>();
+            playerFighter = GetComponent<Fighter>();
         }
         void Update()
         {
-            if (InteractWithCombat()) 
+            if (InteractWithCombat())
             {
-                return; 
+                return;
             }
             if (InteractWithMovement())
             {
@@ -35,11 +35,20 @@ namespace RPG.Control
             foreach (RaycastHit hit in hits)
             {
                 CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-                if (target == null) continue;
-
+                if (target == null)
+                {
+                    continue;
+                }
+                if (!playerFighter.CanAttack(target.gameObject))
+                {
+                    continue;
+                }
                 if (Input.GetMouseButtonDown(0))
                 {
-                    playerFighter.Attack(target);
+                    //If the target is dead the character
+                    //just going to move to the place we clicked.
+                    //If it is not dead we are going to attack it.
+                    playerFighter.Attack(target.gameObject);
                 }
                 return true;
             }

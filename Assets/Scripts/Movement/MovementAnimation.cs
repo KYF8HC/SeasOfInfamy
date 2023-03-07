@@ -6,7 +6,7 @@ using RPG.Control;
 
 namespace RPG.Movement
 {
-    public class PlayerMovementAnimation : MonoBehaviour
+    public class MovementAnimation : MonoBehaviour
     {
         private const string PLAYER_ANIMATOR_FORWARD_SPEED = "forwardSpeed";
 

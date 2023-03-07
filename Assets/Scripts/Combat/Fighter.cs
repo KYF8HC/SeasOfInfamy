@@ -11,8 +11,13 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         public event EventHandler OnPlayerAttack;
+        public event EventHandler OnPlayerStopAttack;
         [SerializeField] private float weaponRange = 2f;
-        private Transform target;
+        [SerializeField] private float timeBetweenAttack = 1f;
+        [SerializeField] private float baseDamage = 10f;
+
+        private float timeSinceLastAttack = 0f;
+        private Health target;
         private Mover moverAgent;
 
         private void Awake()
@@ -21,10 +26,12 @@ namespace RPG.Combat
         }
         private void Update()
         {
+            timeSinceLastAttack += Time.deltaTime;
             if (target == null) return;
+            if (target.GetHealth() == 0) return;
             if (!GetIsInRange())
             {
-                moverAgent.MoveTo(target.position);
+                moverAgent.MoveTo(target.transform.position);
             }
             else
             {
@@ -35,30 +42,47 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
-            OnPlayerAttack?.Invoke(this, EventArgs.Empty);
-        }
-
-        private bool GetIsInRange()
-        {
-            return Vector3.Distance(transform.position, target.position) <= weaponRange;
-        }
-
-        public void Attack(CombatTarget combatTarget)
-        {
+            transform.LookAt(target.transform);
+            if (timeSinceLastAttack >= timeBetweenAttack)
+            {
+                //This will trigger the animation, which will then trigger the Hit() animation event.
+                OnPlayerAttack?.Invoke(this, EventArgs.Empty);
+                timeSinceLastAttack = 0f;
+            }
             
-            target = combatTarget.transform;
-            GetComponent<ActionScheduler>().StartAction(this);
-        }
-        public void Cancel()
-        {
-            //Canceling the attacking
-            target = null;
         }
 
         //Animation Event
         private void Hit()
         {
+            if(target == null) return;
+            target.TakeDamage(baseDamage);
+        }
 
+        private bool GetIsInRange()
+        {
+            return Vector3.Distance(transform.position, target.transform.position) < weaponRange;
+        }
+        public bool CanAttack(GameObject combatTarget)
+        {
+            //Checks if the target is dead, if it is we can not attack it
+            if (combatTarget == null) 
+            {
+                return false; 
+            }
+            Health targetToTest = combatTarget.GetComponent<Health>();
+            return targetToTest != null && targetToTest.GetHealth() != 0;
+        }
+        public void Attack(GameObject combatTarget)
+        {
+            target = combatTarget.GetComponent<Health>();
+            GetComponent<ActionScheduler>().StartAction(this);
+        }
+        public void Cancel()
+        {
+            //Canceling the attacking
+            OnPlayerStopAttack?.Invoke(this, EventArgs.Empty);
+            target = null;
         }
     }
 }
