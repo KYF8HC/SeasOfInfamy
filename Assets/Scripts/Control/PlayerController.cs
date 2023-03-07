@@ -4,6 +4,7 @@ using UnityEngine;
 using RPG.Movement;
 using System;
 using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Control
 {
@@ -11,13 +12,19 @@ namespace RPG.Control
     {
         private Mover playerMover;
         private Fighter playerFighter;
+        private Health health;
         private void Awake()
         {
             playerMover = GetComponent<Mover>();
             playerFighter = GetComponent<Fighter>();
+            health = GetComponent<Health>();
         }
         void Update()
         {
+            if(health.GetHealth() == 0)
+            {
+                return;
+            }
             if (InteractWithCombat())
             {
                 return;
@@ -43,7 +50,7 @@ namespace RPG.Control
                 {
                     continue;
                 }
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButton(0))
                 {
                     //If the target is dead the character
                     //just going to move to the place we clicked.

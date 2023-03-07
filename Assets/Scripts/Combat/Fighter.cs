@@ -16,7 +16,7 @@ namespace RPG.Combat
         [SerializeField] private float timeBetweenAttack = 1f;
         [SerializeField] private float baseDamage = 10f;
 
-        private float timeSinceLastAttack = 0f;
+        private float timeSinceLastAttack = Mathf.Infinity;
         private Health target;
         private Mover moverAgent;
 
