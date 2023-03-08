@@ -12,11 +12,13 @@ namespace RPG.Control
 {
     public class AIController : MonoBehaviour
     {
+        [SerializeField] private PatrolPath patrolPath;
         [SerializeField] private float chaseDistance = 5f;
         [SerializeField] private float suspicionTime = 5f;
         [SerializeField] private float waypointStopTime = 5f;
-        [SerializeField] private PatrolPath patrolPath;
         [SerializeField] private float waypointTolerance = .5f;
+        [Range(0f, 1f)]
+        [SerializeField] private float patrolSpeedFraction = 0.2f;
 
         private GameObject player;
         private Fighter aiFighter;
@@ -51,7 +53,6 @@ namespace RPG.Control
             }
             if (InAttackRangeOfPlayer() && aiFighter.CanAttack(player))
             {
-                timeSinceLastSawPlayer = 0;
                 AttackBehaviour();
             }
             else if (timeSinceLastSawPlayer < suspicionTime)
@@ -62,9 +63,15 @@ namespace RPG.Control
             {
                 PatrolBehaviour();
             }
+            UpdateTimers();
+        }
+
+        private void UpdateTimers()
+        {
             timeSinceLastStopped += Time.deltaTime;
             timeSinceLastSawPlayer += Time.deltaTime;
         }
+
         private void PatrolBehaviour()
         {
             Vector3 nextPosition = guardPosition;
@@ -72,13 +79,13 @@ namespace RPG.Control
             {
                 if (AtWaypoint())
                 {
+                    timeSinceLastStopped = 0;
                     CycleWaypoint();
                 }
                 nextPosition = GetCurrentWaypoint();
             }
             if (timeSinceLastStopped < waypointStopTime) return;
-            aiMover.StartMoveAction(nextPosition);
-            timeSinceLastStopped = 0;
+            aiMover.StartMoveAction(nextPosition, patrolSpeedFraction);
         }
 
         private Vector3 GetCurrentWaypoint()
@@ -102,6 +109,7 @@ namespace RPG.Control
         }
         private void AttackBehaviour()
         {
+            timeSinceLastSawPlayer = 0;
             aiFighter.Attack(player);
         }
 

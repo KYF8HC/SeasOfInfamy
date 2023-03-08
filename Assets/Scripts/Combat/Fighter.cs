@@ -16,6 +16,7 @@ namespace RPG.Combat
         [SerializeField] private float timeBetweenAttack = 1f;
         [SerializeField] private float baseDamage = 10f;
 
+        private float fighterSpeedFraction =  1f;
         private float timeSinceLastAttack = Mathf.Infinity;
         private Health target;
         private Mover moverAgent;
@@ -31,7 +32,7 @@ namespace RPG.Combat
             if (target.GetHealth() == 0) return;
             if (!GetIsInRange())
             {
-                moverAgent.MoveTo(target.transform.position);
+                moverAgent.MoveTo(target.transform.position, fighterSpeedFraction);
             }
             else
             {
@@ -82,6 +83,7 @@ namespace RPG.Combat
         {
             //Canceling the attacking
             OnPlayerStopAttack?.Invoke(this, EventArgs.Empty);
+            moverAgent.Cancel();
             target = null;
         }
     }

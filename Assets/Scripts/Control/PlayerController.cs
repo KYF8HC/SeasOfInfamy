@@ -13,6 +13,7 @@ namespace RPG.Control
         private Mover playerMover;
         private Fighter playerFighter;
         private Health health;
+        private float playerSpeedFraction = 1f;
         private void Awake()
         {
             playerMover = GetComponent<Mover>();
@@ -70,7 +71,7 @@ namespace RPG.Control
             {
                 if (Input.GetMouseButton(0))
                 {
-                    playerMover.StartMoveAction(hit.point);
+                    playerMover.StartMoveAction(hit.point, playerSpeedFraction);
                 }
                 return true;
             }

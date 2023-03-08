@@ -10,6 +10,8 @@ namespace RPG.Movement
 {
     public class Mover : MonoBehaviour, IAction
     {
+        [SerializeField] float moveSpeedMax = 6f;
+
         private bool isWalking;
         private NavMeshAgent moverAgent;
         private Health health;
@@ -25,17 +27,18 @@ namespace RPG.Movement
                 moverAgent.enabled = false;
             }
         }
-        public void StartMoveAction(Vector3 destination)
+        public void StartMoveAction(Vector3 destination, float speedFraction)
         {
             //To separate the simple movement action from the actual moving
             GetComponent<ActionScheduler>().StartAction(this);
-            MoveTo(destination);
+            MoveTo(destination, speedFraction);
         }
 
-        public void MoveTo(Vector3 destination)
+        public void MoveTo(Vector3 destination, float speedFraction)
         {
             //Actual moving
             moverAgent.isStopped = false;
+            moverAgent.speed = moveSpeedMax * Mathf.Clamp01(speedFraction);
             moverAgent.destination = destination;
         }
 
