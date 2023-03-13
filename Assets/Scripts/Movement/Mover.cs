@@ -1,4 +1,5 @@
 using RPG.Core;
+using RPG.Saving;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using UnityEngine.AI;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour, IAction
+    public class Mover : MonoBehaviour, IAction, ISaveable
     {
         [SerializeField] float moveSpeedMax = 6f;
 
@@ -52,5 +53,18 @@ namespace RPG.Movement
         {
             return moverAgent;
         }
+        #region ISaveable
+        public object CaptureState()
+        {
+            return new SerializableVector3(transform.position);
+        }
+
+        public void RestoreState(object state)
+        {
+            SerializableVector3 position = (SerializableVector3)state;
+            transform.GetComponent<NavMeshAgent>().Warp(position.ConvertToVector3());
+            transform.GetComponent<ActionScheduler>().CancelCurrentAction();
+        }
+        #endregion
     }
 }

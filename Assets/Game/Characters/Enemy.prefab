@@ -84,6 +84,10 @@ PrefabInstance:
       propertyPath: m_Speed
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 5573378986071306973, guid: ae3e68a6b3753af41b22ed30b42bee73, type: 3}
+      propertyPath: moveSpeedMax
+      value: 5.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5573378986071306975, guid: ae3e68a6b3753af41b22ed30b42bee73, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -167,6 +171,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc1e4340f35e8ff4ba999e1b103c5f38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1710194168355466217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2800624585006077651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ebca5fd47a37894ca00e327e8df4619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolPath: {fileID: 0}
+  chaseDistance: 5
+  suspicionTime: 5
+  waypointStopTime: 5
+  waypointTolerance: 0.5
+  patrolSpeedFraction: 0.2
 --- !u!114 &2609762076318114810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,19 +225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bf07a4f174d1db40aaf542de87475b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1710194168355466217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2800624585006077651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ebca5fd47a37894ca00e327e8df4619, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chaseDistance: 5
 --- !u!114 &5530348569147277451
 MonoBehaviour:
   m_ObjectHideFlags: 0

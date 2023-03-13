@@ -1,10 +1,7 @@
 using RPG.Control;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 namespace RPG.SceneManagement
@@ -24,9 +21,11 @@ namespace RPG.SceneManagement
         [SerializeField] private float fadeWaitingTime = .5f;
 
         private Fader fader;
-        private void Awake()
+        private SavingWrapper savingWrapper;
+        private void Start()
         {
             fader = FindObjectOfType<Fader>();
+            savingWrapper = FindObjectOfType<SavingWrapper>();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -36,9 +35,9 @@ namespace RPG.SceneManagement
                 StartCoroutine(Transition());
             }
         }
-        private  IEnumerator Transition()
+        private IEnumerator Transition()
         {
-            if(sceneIDToLoad < 0)
+            if (sceneIDToLoad < 0)
             {
                 Debug.LogError("Scene to load not set.");
                 yield break;
@@ -46,14 +45,23 @@ namespace RPG.SceneManagement
             DontDestroyOnLoad(gameObject);
 
             yield return fader.FadeOut(fadeOutWaitingTime);
+
+            savingWrapper.Save();
+
             yield return SceneManager.LoadSceneAsync(sceneIDToLoad);
+            PlayerController player = FindObjectOfType<PlayerController>();
+            player.enabled = false;
+
+            savingWrapper.Load();
 
             Portal otherPortal = GetOtherPortal();
             UpdatePlayer(otherPortal);
-            
+
+            savingWrapper.Save();
+
             yield return new WaitForSeconds(fadeWaitingTime);
             yield return fader.FadeIn(fadeInWaitingTime);
-
+            player.enabled = true;
             Destroy(gameObject);
         }
 
@@ -68,7 +76,7 @@ namespace RPG.SceneManagement
             Portal[] portals = FindObjectsOfType<Portal>();
             foreach (Portal portal in portals)
             {
-                if(portal == this) continue;
+                if (portal == this) continue;
                 if (portal.destination != destination) continue;
                 return portal;
             }
